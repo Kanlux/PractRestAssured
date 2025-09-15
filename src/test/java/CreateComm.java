@@ -16,7 +16,7 @@ public class CreateComm {
     @Description("Успешное добавление комментария")
     @Test
     public void successCreateNewsComm() {
-        CommentResponse createdComment = CommentResponse.createComm();
+        CommentResponse createdComment = Methods.createComm();
 
         Assert.assertEquals(createdComment.getText(), "Comm");
     }
@@ -24,22 +24,19 @@ public class CreateComm {
     @Description("Неуспешное добавление комментария из-за отсутсвия текста")
     @Test
     public void unsuccessCreateNewsComm() {
-        NewsResponse createdNews = News.createNews();
+        NewsResponse createdNews = Methods.createNews();
         String newsId = String.valueOf(createdNews.getId());
         CommentRequest comment = new CommentRequest(Integer.parseInt(newsId));
 
-        RestAssured.baseURI = Contains.URI;
         RestAssured.basePath = "/comments";
                 given()
-                        .contentType(ContentType.JSON)
-                        .header("Authorization", "Bearer " + Contains.tokenOfTest)
+                        .spec(Specification.requestSpecJson())
+                        .auth().oauth2(Constants.tokenOfTest)
                         .body(comment)
                         .when()
                         .post()
                         .then()
-                        .statusCode(400)
-                        .log().all()
-
+                        .spec(Specification.responseSpec400())
                         .body("message", hasItems("text should not be empty", "text must be a string"));
     }
 }

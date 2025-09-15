@@ -20,10 +20,6 @@ public class News {
     private List<NewsTag> tags;
     private List<News> posts;
 
-    public News() {
-
-    }
-
     public int getId() {
         return id;
     }
@@ -70,25 +66,5 @@ public class News {
 
     public List<News> getPosts() {
         return posts;
-    }
-
-    public static NewsResponse createNews() {
-        RestAssured.baseURI = "https://api.news.academy.dunice.net";
-        RestAssured.basePath = "/posts";
-
-        return given()
-                .contentType(ContentType.MULTIPART)
-                .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDczMiwiaWF0IjoxNzU3Njg3ODYzLCJleHAiOjE3NTg4OTc0NjN9.GnuqTTCws3cd3nqieqVuI1xKfiBPpFh8r31rV9wN0_M")
-                .multiPart("title", "Title")
-                .multiPart("text", "Text")
-                .multiPart("tags[]", "tag1")
-                .multiPart("file", new File("src/main/resources/12.jpg"), "image/jpeg")
-                .when()
-                .post()
-                .then()
-                .statusCode(201)
-                .log().all()
-                .extract()
-                .as(NewsResponse.class);
     }
 }

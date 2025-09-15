@@ -16,8 +16,6 @@ public class UserData {
     private Date updatedAt;
     private Integer rating;
 
-    public UserData() {}
-
     public Integer getId() {
         return id;
     }

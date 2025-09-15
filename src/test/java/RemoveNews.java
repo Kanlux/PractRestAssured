@@ -14,33 +14,34 @@ public class RemoveNews {
     @Description("Успешное удаление новости по верному ID")
     @Test
     public void successRemoveNews() {
-        NewsResponse createdNews = News.createNews();
+        NewsResponse createdNews = Methods.createNews();
         String newsId = String.valueOf(createdNews.getId());
 
-        RestAssured.baseURI = Contains.URI;
-        RestAssured.basePath = "/posts/" + newsId;
+        RestAssured.basePath = "/posts/{id}";
         given()
-                .header("Authorization", "Bearer " + Contains.tokenOfTest)
+                .spec(Specification.requestSpecJson())
+                .pathParam("id", newsId)
+                .auth().oauth2(Constants.tokenOfTest)
                 .when()
                 .delete()
                 .then()
-                .statusCode(200)
-                .log().all();
+                .spec(Specification.responseSpec200());
     }
 
     @Description("Не успешное удаление новости по неверному ID")
     @Test
     public void unsuccessRemoveNews() {
-        RestAssured.baseURI = Contains.URI;
-        RestAssured.basePath = "/posts/999999";
+
+        RestAssured.basePath = "/posts/{id}";
         given()
-                .header("Authorization", "Bearer " + Contains.tokenOfTest)
+                .spec(Specification.requestSpecJson())
+                .auth().oauth2(Constants.tokenOfTest)
+                .pathParam("id", Constants.invalidId)
                 .when()
                 .delete()
                 .then()
                 .statusCode(404)
                 .log().all()
-
                 .body("message", equalTo("Not Found"));
     }
 }

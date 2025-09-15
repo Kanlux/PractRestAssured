@@ -2,7 +2,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -16,13 +15,12 @@ public class SearchNews {
     @Test
     public void successSearch() {
         NewsResponse response = new NewsResponse();
-        RestAssured.baseURI = Contains.URI
         ;
         RestAssured.basePath = "/posts";
-        given().contentType(ContentType.JSON)
+        given().spec(Specification.requestSpecJson())
                 .queryParam("search", "Hello")
                 .when().get()
-                .then().statusCode(200).log().all()
+                .then().spec(Specification.responseSpec200())
                 .extract().as(NewsResponse.class);
 
         String text = response.getText();

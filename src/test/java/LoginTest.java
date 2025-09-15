@@ -14,7 +14,7 @@ public class LoginTest {
     @Test
     public void successLog() {
         Specification.installSpecification(Specification.requestSpecJson(), Specification.responseSpec200());
-        LoginRequest login = new LoginRequest(Contains.duplicateEmail, Contains.password);
+        LoginRequest login = new LoginRequest(Constants.duplicateEmail, Constants.password);
 
         LoginResponse response = RestAssured.given()
                 .body(login)
@@ -24,7 +24,7 @@ public class LoginTest {
                 .extract()
                 .as(LoginResponse.class);
 
-        Assert.assertEquals(response.getUser().getEmail(), Contains.duplicateEmail);
+        Assert.assertEquals(response.getUser().getEmail(), Constants.duplicateEmail);
     }
 
     @Description("Неуспешная авторизация незарегистрированного пользователя")

@@ -2,7 +2,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -18,22 +17,22 @@ public class ChangeNews {
     @Description("Успешное изменение новости с вводом всех нужных данных")
     @Test
     public void successChangeNews() {
-        NewsResponse createdNews = News.createNews();
+        NewsResponse createdNews = Methods.createNews();
         String newsId = String.valueOf(createdNews.getId());
 
-        RestAssured.baseURI = Contains.URI;
-        RestAssured.basePath = "/posts/" + newsId;
+        RestAssured.basePath = "/posts/{id}";
         NewsResponse response =
         given()
-                .contentType(ContentType.MULTIPART)
-                .header("Authorization", "Bearer " + Contains.tokenOfTest)
+                .spec(Specification.requestSpecMulti())
+                .pathParam("id", newsId)
+                .auth().oauth2(Constants.tokenOfTest)
                 .multiPart("title", "Hi")
                 .multiPart("text", "Hello World!")
                 .multiPart("file", new File("src/main/resources/12.jpg"), "image/jpeg")
                 .when()
                 .patch()
                 .then()
-                .statusCode(200).log().all()
+                .spec(Specification.responseSpec200())
                 .extract()
                 .as(NewsResponse.class);
 
@@ -43,11 +42,11 @@ public class ChangeNews {
     @Description("Неуспешное изменение новости с вводом не всех нужных данных")
     @Test
     public void unsuccessChangeNews() {
-        RestAssured.baseURI = Contains.URI;
-        RestAssured.basePath = "/posts/999999";
+        RestAssured.basePath = "/posts/{id}";
                 given()
-                        .contentType(ContentType.MULTIPART)
-                        .header("Authorization", "Bearer " + Contains.tokenOfTest)
+                        .spec(Specification.requestSpecMulti())
+                        .pathParam("id", Constants.invalidId)
+                        .auth().oauth2(Constants.tokenOfTest)
                         .multiPart("title", "Hi")
                         .multiPart("text", "Hello World!")
                         .multiPart("file", new File("src/main/resources/12.jpg"), "image/jpeg")
@@ -55,7 +54,6 @@ public class ChangeNews {
                         .patch()
                         .then()
                         .statusCode(404).log().all()
-
                         .body("message", equalTo("Not Found"));
     }
 }

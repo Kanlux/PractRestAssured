@@ -15,20 +15,20 @@ public class DeleteComm {
     @Description("Успешное удаление комментария по ID")
     @Test
     public void successDeleteCommit() {
-        CommentResponse createdComm = CommentResponse.createComm();
+        CommentResponse createdComm = Methods.createComm();
         String commId = String.valueOf(createdComm.getId());
-        RestAssured.baseURI = Contains.URI;
-        RestAssured.basePath = "/comments/" + commId;
+        RestAssured.basePath = "/comments/{id}";
         String response =
-        given()
-                .header("Authorization", "Bearer " + Contains.tokenOfTest)
-                .when()
-                .delete()
-                .then()
-                .statusCode(200)
-                .log().all()
-                .extract()
-                .asString();
+                given()
+                        .spec(Specification.requestSpecJson())
+                        .pathParam("id", commId)
+                        .auth().oauth2(Constants.tokenOfTest)
+                        .when()
+                        .delete()
+                        .then()
+                        .spec(Specification.responseSpec200())
+                        .extract()
+                        .asString();
 
         Assert.assertTrue(response.isEmpty(), "Response body should be empty after deletion");
     }
@@ -36,17 +36,16 @@ public class DeleteComm {
     @Description("Неуспешное удаление комментария из-за отсутствия авторизации")
     @Test
     public void unsuccessDeleteCommit() {
-        CommentResponse createdComm = CommentResponse.createComm();
+        CommentResponse createdComm = Methods.createComm();
         String commId = String.valueOf(createdComm.getId());
-        RestAssured.baseURI = Contains.URI;
-        RestAssured.basePath = "/comments/" + commId;
+        RestAssured.basePath = "/comments/{id}";
         given()
+                .spec(Specification.requestSpecJson())
+                .pathParam("id", commId)
                 .when()
                 .delete()
                 .then()
-                .statusCode(401)
-                .log().all()
-
+                .spec(Specification.responseSpec401())
                 .body("message", equalTo("Unauthorized"));
     }
 }

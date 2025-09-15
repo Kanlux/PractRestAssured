@@ -19,7 +19,7 @@ public class RegistrationTest {
     public void successReg() {
         Specification.installSpecification(Specification.requestSpecJson(), Specification.responseSpec201());
         String randomEmail = "user_" + UUID.randomUUID().toString().substring(0, 8) + "@nv.dunice.net";
-        RegisterResponse newUser = new RegisterResponse(randomEmail, Contains.password);
+        RegisterResponse newUser = new RegisterResponse(randomEmail, Constants.password);
 
         RegisterRequest response = given()
                 .body(newUser)
@@ -29,17 +29,14 @@ public class RegistrationTest {
                 .extract()
                 .as(RegisterRequest.class);
 
-        System.out.println("Response body:\n" + response.getUser().toString());
-
         Assert.assertEquals(response.getUser().getEmail(), randomEmail);
-        System.out.println("Регистрация успешна. Токен: " + response.getAccessToken());
     }
 
     @Description("Неуспешная регистрация пользователя с неуникальными значениями")
     @Test
     public void negativeReg() {
         Specification.installSpecification(Specification.requestSpecJson(), Specification.responseSpec400());
-        RegisterResponse newUser = new RegisterResponse(Contains.duplicateEmail, "password123");
+        RegisterResponse newUser = new RegisterResponse(Constants.duplicateEmail, "password123");
 
         Response response = RestAssured
                 .given()
@@ -51,7 +48,6 @@ public class RegistrationTest {
                 .extract()
                 .response();
 
-        String errorMessage  = response.jsonPath().getString("message");
-        Assert.assertEquals("Validation error", errorMessage)  ;
+        Assert.assertEquals("Validation error", response.jsonPath().getString("message"))  ;
     }
 }

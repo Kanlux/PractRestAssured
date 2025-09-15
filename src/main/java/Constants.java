@@ -1,4 +1,4 @@
-public class Contains {
+public class Constants {
     static String duplicateEmail = "duplicate@nv.dunice.net";
     static String password = "password123";
     static String URI = "https://api.news.academy.dunice.net";

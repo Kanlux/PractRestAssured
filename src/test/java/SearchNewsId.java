@@ -16,17 +16,16 @@ public class SearchNewsId {
     @Test
     @Description("Успешное получение определенной новости по верному ID")
     public void successSearchNewsId() {
-        NewsResponse createdNews = News.createNews();
+        NewsResponse createdNews = Methods.createNews();
         String newsId = String.valueOf(createdNews.getId());
 
-        RestAssured.baseURI = Contains.URI;
-        RestAssured.basePath = "/posts/ " + newsId;
+        RestAssured.basePath = "/posts/{id}";
         NewsResponse response =
-        given().contentType(ContentType.JSON)
+        given().spec(Specification.requestSpecJson())
+                .pathParam("id", newsId)
                 .get()
                 .then()
-                .statusCode(200)
-                .log().all()
+                .spec(Specification.responseSpec200())
                 .extract().as(NewsResponse.class);
 
         Assert.assertEquals(response.getId(), Integer.parseInt(newsId));
@@ -35,16 +34,16 @@ public class SearchNewsId {
     @Description("Неуспешное получение определенной новости по неверному ID")
     @Test
     public void unsuccessSearchNewsId() {
-        News.createNews();
+        Methods.createNews();
 
-        RestAssured.baseURI = Contains.URI;
-        RestAssured.basePath = "/posts/ " + Contains.invalidId;
+        RestAssured.baseURI = Constants.URI;
+        RestAssured.basePath = "/posts/{id}";
         given().contentType(ContentType.JSON)
+                .pathParam("id", Constants.invalidId)
                 .when()
                 .get()
                 .then()
                 .statusCode(404)
-
                 .body("statusCode", equalTo(404));
     }
 }

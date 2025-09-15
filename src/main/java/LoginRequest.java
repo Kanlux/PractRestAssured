@@ -4,7 +4,6 @@ public class LoginRequest {
     private UserData user;
     private String accessToken;
 
-
     public LoginRequest(String email, String password) {
         this.email = email;
         this.password = password;

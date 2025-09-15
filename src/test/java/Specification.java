@@ -10,8 +10,16 @@ public class Specification {
 
     public static RequestSpecification requestSpecJson() {
         return new RequestSpecBuilder()
-                .setBaseUri(Contains.URI)
+                .setBaseUri(Constants.URI)
                 .setContentType(ContentType.JSON)
+                .log(LogDetail.ALL)
+                .build();
+    }
+
+    public static RequestSpecification requestSpecMulti() {
+        return new RequestSpecBuilder()
+                .setBaseUri(Constants.URI)
+                .setContentType(ContentType.MULTIPART)
                 .log(LogDetail.ALL)
                 .build();
     }

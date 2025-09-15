@@ -3,9 +3,6 @@ public class RegisterRequest {
     private String accessToken;
     private String userId;
 
-    public RegisterRequest() {
-    }
-
     public UserData getUser() {
         return user;
     }
