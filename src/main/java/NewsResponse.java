@@ -4,7 +4,7 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NewsResponse {
-    private int id;
+    private Integer id;
     private String title;
     private String text;
     private String coverPath;

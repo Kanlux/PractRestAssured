@@ -1,8 +1,3 @@
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-
-import static io.restassured.RestAssured.given;
-
 public class CommentResponse {
     private int id;
     private String text;

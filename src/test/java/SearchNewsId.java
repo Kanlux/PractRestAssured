@@ -3,7 +3,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -14,15 +13,11 @@ import static org.hamcrest.Matchers.equalTo;
 @Owner("Sergey Bordiyan")
 public class SearchNewsId {
 
-    @BeforeAll
-    static void login() {
-        Methods.createUser();
-    }
-
     @Test
     @Description("Успешное получение определенной новости по верному ID")
-    public void successSearchNewsId() {
-        NewsResponse createdNews = Methods.createNews();
+    public void successSearchNewsByValidId() {
+        RegisterRequest login = Methods.createUser();
+        NewsResponse createdNews = Methods.createNews(login.getAccessToken());
         String newsId = String.valueOf(createdNews.getId());
 
         RestAssured.basePath = "/posts/{id}";
@@ -31,6 +26,7 @@ public class SearchNewsId {
                 .pathParam("id", newsId)
                 .get()
                 .then()
+                .log().all()
                 .spec(Specification.responseSpec200())
                 .extract().as(NewsResponse.class);
 
@@ -39,8 +35,9 @@ public class SearchNewsId {
 
     @Description("Неуспешное получение определенной новости по неверному ID")
     @Test
-    public void unsuccessSearchNewsId() {
-        Methods.createNews();
+    public void unsuccessSearchNewsByInvalidId() {
+        RegisterRequest login = Methods.createUser();
+        Methods.createNews(login.getAccessToken());
 
         RestAssured.baseURI = Constants.URI;
         RestAssured.basePath = "/posts/{id}";

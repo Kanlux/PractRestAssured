@@ -22,25 +22,22 @@ public class Methods {
                 .response()
                 .as(RegisterRequest.class);
 
-        System.out.println("Регистрация успешна. Токен: " + response.getAccessToken());
-        System.out.println("ID: " + response.getUser().getId());
-        Constants.tokenOfTest = response.getAccessToken();
         Constants.userId = String.valueOf(response.getUser().getId());
         Constants.email = randomEmail;
         return response;
     }
 
-    public static NewsResponse createNews() {
-        RestAssured.baseURI = "https://api.news.academy.dunice.net";
-        RestAssured.basePath = "/posts";
+    public static NewsResponse createNews(String token) {
+        RestAssured.baseURI = Constants.baseURI;
+        RestAssured.basePath = Constants.basePathPosts;
 
         return given()
                 .contentType(ContentType.MULTIPART)
-                .auth().oauth2(Constants.tokenOfTest)
-                .multiPart("title", "Title")
-                .multiPart("text", "Text")
-                .multiPart("tags[]", "tag1")
-                .multiPart("file", new File("src/main/resources/12.jpg"), "image/jpeg")
+                .auth().oauth2(token)
+                .multiPart("title", Constants.postTitle)
+                .multiPart("text", Constants.postText)
+                .multiPart("tags[]", Constants.postTag)
+                .multiPart("file", new File(Constants.imageFile), "image/jpg")
                 .when()
                 .post()
                 .then()
@@ -50,18 +47,14 @@ public class Methods {
                 .as(NewsResponse.class);
     }
 
-    public static CommentResponse createComm() {
-        NewsResponse createdNews = Methods.createNews();
-        String newsId = String.valueOf(createdNews.getId());
+    public static CommentResponse createComm(String token, int id) {
+        CommentRequest comment = new CommentRequest("Comm", id);
 
-        CommentRequest comment = new CommentRequest("Comm", Integer.parseInt(newsId));
-
-        RestAssured.baseURI = "https://api.news.academy.dunice.net";
-        RestAssured.basePath = "/comments/";
-
+        RestAssured.baseURI = Constants.baseURI;
+        RestAssured.basePath = Constants.basePathComments;
         return given()
                 .contentType(ContentType.JSON)
-                .auth().oauth2(Constants.tokenOfTest)
+                .auth().oauth2(token)
                 .body(comment)
                 .when()
                 .post()

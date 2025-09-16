@@ -8,18 +8,18 @@ import org.testng.Assert;
 
 @Epic("Авторизация пользователя")
 @Owner("Sergey Bordiyan")
-public class LoginTest {
+public class LoginUserTest {
 
     @Description("Успешная авторизация зарегистрированного пользователя с валидными данными")
     @Test
-    public void successLog() {
+    public void successLogByValidData() {
         Methods.createUser();
         LoginRequest login = new LoginRequest(Constants.email, Constants.password);
 
         LoginResponse response = RestAssured.given()
                 .spec(Specification.requestSpecJson())
                 .body(login)
-                .post("/auth/login")
+                .post(Constants.basePathUsersLogin)
                 .then()
                 .spec(Specification.responseSpec200())
                 .extract()
@@ -30,13 +30,13 @@ public class LoginTest {
 
     @Description("Неуспешная авторизация незарегистрированного пользователя")
     @Test
-    public void negativeLog() {
+    public void unsuccessLogOfUnregisteredUser() {
         Specification.installSpecification(Specification.requestSpecJson(), Specification.responseSpec401());
         LoginRequest login = new LoginRequest("serjik@mail.com", "StrongPassword");
 
         Response response = RestAssured.given()
                 .body(login)
-                .post("/auth/login")
+                .post(Constants.basePathUsersLogin)
                 .then()
                 .statusCode(401)
                 .extract()

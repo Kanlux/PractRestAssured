@@ -8,17 +8,17 @@ import org.testng.Assert;
 
 @Epic("Авторизация пользователя")
 @Owner("Sergey Bordiyan")
-public class GetUser {
+public class GetUserData {
 
     @Description("Успешное получение информации о пользователе по ID")
     @Test
-    public void successGetInfUser() {
-        Methods.createUser();
+    public void successGetUserDataByValidId() {
+        RegisterRequest login = Methods.createUser();
 
         UserData response = RestAssured
                 .given()
                 .spec(Specification.requestSpecJson())
-                .get("/users/" + Constants.userId)
+                .get(Constants.basePathUsers + login.getUser().getId())
                 .then()
                 .spec(Specification.responseSpec200())
                 .extract()
@@ -29,12 +29,12 @@ public class GetUser {
 
     @Description("Неспешное получение информации о пользователе по неверному ID")
     @Test
-    public void negativeGetInfUser() {
+    public void unsuccessGetUserDataByInvalidId() {
         Specification.installSpecification(Specification.requestSpecJson(), Specification.responseSpec200());
 
         Response response = RestAssured
                 .given()
-                .get("users/" + Constants.invalidId)
+                .get(Constants.basePathUsers + Constants.invalidId)
                 .then()
                 .extract()
                 .response();

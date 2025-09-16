@@ -2,8 +2,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -14,22 +12,22 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @Owner("Sergey Bordiyan")
 public class ChangeComment {
 
-    @BeforeAll
-    static void login() {
-        Methods.createUser();
-    }
-
     @Description("Успешное изменение комментария по валидному ID")
     @Test
-    public void successChangeComm() {
-        CommentResponse createdComm = Methods.createComm();
+    public void givenLoginAndId_WhenChangeComment_ThenSuccess() {
+        RegisterRequest login = Methods.createUser();
+        NewsResponse newsId = Methods.createNews(login.getAccessToken());
+        CommentResponse createdComm = Methods.createComm(login.getAccessToken(), newsId.getId());
         int commId = createdComm.getId();
         CommentRequest comment = new CommentRequest("Comment", commId);
+
+        //Если я помещаю в константы: basePathComments = "/comments/{id}" Мне выдаёт ошибку
+        //Из-за этого оставил не тронутым
 
         RestAssured.basePath = "/comments/{id}";
         CommentResponse response = given()
                 .spec(Specification.requestSpecJson())
-                .auth().oauth2(Constants.tokenOfTest)
+                .auth().oauth2(login.getAccessToken())
                 .pathParam("id", commId)
                         .body(comment)
                         .when()
@@ -44,8 +42,10 @@ public class ChangeComment {
 
     @Description("Неуспешное изменение комментария из-за отсутствия авторизации")
     @Test
-    public void unsuccessChangeComm() {
-        CommentResponse createdComm = Methods.createComm();
+    public void unsuccessChangeOfCommentNoToken() {
+        RegisterRequest login = Methods.createUser();
+        NewsResponse newsId = Methods.createNews(login.getAccessToken());
+        CommentResponse createdComm = Methods.createComm(login.getAccessToken(), newsId.getId());
         int commId = createdComm.getId();
         CommentRequest comment = new CommentRequest("Comment", commId);
 

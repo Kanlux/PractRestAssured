@@ -2,7 +2,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -15,26 +14,21 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @Owner("Sergey Bordiyan")
 public class ChangeNews {
 
-    @BeforeAll
-    static void login() {
-        Methods.createUser();
-    }
-
     @Description("Успешное изменение новости с вводом всех нужных данных")
     @Test
-    public void successChangeNews() {
-        NewsResponse createdNews = Methods.createNews();
+    public void successChangeOfNewsWithCorrectData() {
+        RegisterRequest login = Methods.createUser();
+        NewsResponse createdNews = Methods.createNews(login.getAccessToken());
         String newsId = String.valueOf(createdNews.getId());
 
         RestAssured.basePath = "/posts/{id}";
-        NewsResponse response =
-        given()
+        NewsResponse response = given()
                 .spec(Specification.requestSpecMulti())
                 .pathParam("id", newsId)
-                .auth().oauth2(Constants.tokenOfTest)
-                .multiPart("title", "Hi")
-                .multiPart("text", "Hello World!")
-                .multiPart("file", new File("src/main/resources/12.jpg"), "image/jpeg")
+                .auth().oauth2(login.getAccessToken())
+                .multiPart("title", Constants.postTitle)
+                .multiPart("text", Constants.postText)
+                .multiPart("file", new File(Constants.imageFile), "image/jpeg")
                 .when()
                 .patch()
                 .then()
@@ -42,17 +36,18 @@ public class ChangeNews {
                 .extract()
                 .as(NewsResponse.class);
 
-        Assert.assertEquals(response.getText(), "Hello World!");
+        Assert.assertEquals(response.getText(), Constants.postText);
     }
 
-    @Description("Неуспешное изменение новости с вводом не всех нужных данных")
+    @Description("Неуспешное изменение новости из-за отсутствия новости по указаному ID")
     @Test
-    public void unsuccessChangeNews() {
+    public void GivenInvalidUserId_WhenPatch_ThenNotFound() {
+        RegisterRequest login = Methods.createUser();
         RestAssured.basePath = "/posts/{id}";
                 given()
                         .spec(Specification.requestSpecMulti())
                         .pathParam("id", Constants.invalidId)
-                        .auth().oauth2(Constants.tokenOfTest)
+                        .auth().oauth2(login.getAccessToken())
                         .multiPart("title", "Hi")
                         .multiPart("text", "Hello World!")
                         .multiPart("file", new File("src/main/resources/12.jpg"), "image/jpeg")

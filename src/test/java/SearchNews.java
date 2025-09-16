@@ -13,11 +13,9 @@ public class SearchNews {
 
     @Description("Успешное получение всех новостей")
     @Test
-    public void successSearch() {
-        NewsResponse response = new NewsResponse();
-        ;
-        RestAssured.basePath = "/posts";
-        given().spec(Specification.requestSpecJson())
+    public void successSearchAllNews() {
+        RestAssured.basePath = Constants.basePathPosts;
+        NewsResponse response = given().spec(Specification.requestSpecJson())
                 .queryParam("search", "Hello")
                 .when().get()
                 .then().spec(Specification.responseSpec200())

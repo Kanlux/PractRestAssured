@@ -2,7 +2,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -13,22 +12,18 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @Owner("Sergey Bordiyan")
 public class DeleteComment {
 
-    @BeforeAll
-    static void login() {
-        Methods.createUser();
-    }
-
     @Description("Успешное удаление комментария по ID")
     @Test
-    public void successDeleteCommit() {
-        CommentResponse createdComm = Methods.createComm();
-        String commId = String.valueOf(createdComm.getId());
+    public void givenLogin_WhenDeleteComment_ThenSuccess() {
+        RegisterRequest login = Methods.createUser();
+        NewsResponse newsId = Methods.createNews(login.getAccessToken());
+        CommentResponse createdComm = Methods.createComm(login.getAccessToken(), newsId.getId());
         RestAssured.basePath = "/comments/{id}";
         String response =
                 given()
                         .spec(Specification.requestSpecJson())
-                        .pathParam("id", commId)
-                        .auth().oauth2(Constants.tokenOfTest)
+                        .pathParam("id", createdComm.getId())
+                        .auth().oauth2(login.getAccessToken())
                         .when()
                         .delete()
                         .then()
@@ -41,13 +36,14 @@ public class DeleteComment {
 
     @Description("Неуспешное удаление комментария из-за отсутствия авторизации")
     @Test
-    public void unsuccessDeleteCommit() {
-        CommentResponse createdComm = Methods.createComm();
-        String commId = String.valueOf(createdComm.getId());
+    public void unsuccessDeleteOfCommentNoToken() {
+        RegisterRequest login = Methods.createUser();
+        NewsResponse newsId = Methods.createNews(login.getAccessToken());
+        CommentResponse createdComm = Methods.createComm(login.getAccessToken(), newsId.getId());
         RestAssured.basePath = "/comments/{id}";
         given()
                 .spec(Specification.requestSpecJson())
-                .pathParam("id", commId)
+                .pathParam("id", createdComm.getId())
                 .when()
                 .delete()
                 .then()

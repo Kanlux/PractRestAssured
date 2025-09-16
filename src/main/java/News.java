@@ -1,10 +1,4 @@
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-
-import java.io.File;
 import java.util.List;
-
-import static io.restassured.RestAssured.given;
 
 public class News {
     private int id;

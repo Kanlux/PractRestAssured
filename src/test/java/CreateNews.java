@@ -2,7 +2,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -15,27 +14,24 @@ import static org.testng.AssertJUnit.assertEquals;
 @Owner("Sergey Bordiyan")
 public class CreateNews {
 
-    @BeforeAll
-    static void login() {
-        Methods.createUser();
-    }
-
     @Description("Успешное создание новости авторизованного пользователя")
     @Test
-    public void createNewsSuccess() {
-        NewsResponse createdNews = Methods.createNews();
+    public void createNewsSuccessWithValidToken() {
+        RegisterRequest login = Methods.createUser();
+        NewsResponse createdNews = Methods.createNews(login.getAccessToken());
 
-        assertEquals("Title", createdNews.getTitle());
-        assertEquals("Text", createdNews.getText());
+        assertEquals(Constants.postTitle, createdNews.getTitle());
+        assertEquals(Constants.postText, createdNews.getText());
     }
 
     @Description("Неуспешное создание новости из-за отсутсвия всех нужных данных")
     @Test
-    public void createNewsNegative() {
-        RestAssured.basePath = "/posts";
+    public void unsuccessСreateOfNewsNoRequiredData() {
+        RegisterRequest login = Methods.createUser();
+        RestAssured.basePath = Constants.basePathPosts;
         given()
                 .spec(Specification.requestSpecMulti())
-                .auth().oauth2(Constants.tokenOfTest)
+                .auth().oauth2(login.getAccessToken())
                 .multiPart("text", "Text")
                 .multiPart("file", new File("src/main/resources/12.jpg"), "image/jpeg")
                 .multiPart("tags[]", "tag1")
