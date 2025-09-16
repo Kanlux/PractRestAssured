@@ -12,14 +12,15 @@ public class GetUser {
 
     @Description("Успешное получение информации о пользователе по ID")
     @Test
-    public void successGet() {
-        Specification.installSpecification(Specification.requestSpecJson(), Specification.responseSpec200());
+    public void successGetInfUser() {
+        Methods.createUser();
 
         UserData response = RestAssured
                 .given()
-                .get("/users/4618")
+                .spec(Specification.requestSpecJson())
+                .get("/users/" + Constants.userId)
                 .then()
-                .log().all()
+                .spec(Specification.responseSpec200())
                 .extract()
                 .as(UserData.class);
 
@@ -28,12 +29,12 @@ public class GetUser {
 
     @Description("Неспешное получение информации о пользователе по неверному ID")
     @Test
-    public void negativeGet() {
+    public void negativeGetInfUser() {
         Specification.installSpecification(Specification.requestSpecJson(), Specification.responseSpec200());
 
         Response response = RestAssured
                 .given()
-                .get("users/99999")
+                .get("users/" + Constants.invalidId)
                 .then()
                 .extract()
                 .response();

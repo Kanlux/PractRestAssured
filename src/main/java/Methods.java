@@ -24,6 +24,9 @@ public class Methods {
 
         System.out.println("Регистрация успешна. Токен: " + response.getAccessToken());
         System.out.println("ID: " + response.getUser().getId());
+        Constants.tokenOfTest = response.getAccessToken();
+        Constants.userId = String.valueOf(response.getUser().getId());
+        Constants.email = randomEmail;
         return response;
     }
 
@@ -33,7 +36,7 @@ public class Methods {
 
         return given()
                 .contentType(ContentType.MULTIPART)
-                .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDczMiwiaWF0IjoxNzU3Njg3ODYzLCJleHAiOjE3NTg4OTc0NjN9.GnuqTTCws3cd3nqieqVuI1xKfiBPpFh8r31rV9wN0_M")
+                .auth().oauth2(Constants.tokenOfTest)
                 .multiPart("title", "Title")
                 .multiPart("text", "Text")
                 .multiPart("tags[]", "tag1")
@@ -58,7 +61,7 @@ public class Methods {
 
         return given()
                 .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDczMiwiaWF0IjoxNzU3Njg3ODYzLCJleHAiOjE3NTg4OTc0NjN9.GnuqTTCws3cd3nqieqVuI1xKfiBPpFh8r31rV9wN0_M")
+                .auth().oauth2(Constants.tokenOfTest)
                 .body(comment)
                 .when()
                 .post()

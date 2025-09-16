@@ -3,6 +3,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -12,6 +13,11 @@ import static org.hamcrest.Matchers.equalTo;
 @Epic("Получение определенной новости по ID")
 @Owner("Sergey Bordiyan")
 public class SearchNewsId {
+
+    @BeforeAll
+    static void login() {
+        Methods.createUser();
+    }
 
     @Test
     @Description("Успешное получение определенной новости по верному ID")

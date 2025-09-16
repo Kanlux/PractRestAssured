@@ -2,6 +2,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -13,6 +14,11 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @Epic("Изменение новости")
 @Owner("Sergey Bordiyan")
 public class ChangeNews {
+
+    @BeforeAll
+    static void login() {
+        Methods.createUser();
+    }
 
     @Description("Успешное изменение новости с вводом всех нужных данных")
     @Test

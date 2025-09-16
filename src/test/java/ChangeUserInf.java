@@ -3,6 +3,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -15,25 +16,25 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @Owner("Sergey Bordiyan")
 public class ChangeUserInf {
 
+    @BeforeAll
+    static void login() {
+        Methods.createUser();
+    }
+
     @Description("Успешное изменение информации о пользователе по ID")
     @Test
     public void successChange() {
-        RegisterRequest registerRequest = Methods.createUser();
-
-        String token = registerRequest.getAccessToken();
-        String userId = String.valueOf(registerRequest.getUser().getId());
-
         UpdateUser update = new UpdateUser(Constants.firstName, Constants.lastName);
 
         RestAssured.basePath = "/users/{id}";
         UserData user = given()
                 .spec(Specification.requestSpecJson())
-                .auth().oauth2(token)
-                .pathParam("id", userId)
+                .auth().oauth2(Constants.tokenOfTest)
+                .pathParam("id", Constants.userId)
                 .body(update)
                 .patch()
                 .then()
-                .statusCode(200)
+                .spec(Specification.responseSpec200())
                 .extract()
                 .as(UserData.class);
 
@@ -44,20 +45,17 @@ public class ChangeUserInf {
     @Description("Неуспешное изменение информации о пользователе неверному по ID")
     @Test
     public void negativeChange() {
-        RegisterRequest registerRequest = Methods.createUser();
-
-        String token = registerRequest.getAccessToken();
-
         UpdateUser updateUser = new UpdateUser (Constants.firstName, Constants.lastName);
 
         String fakeId = UUID.randomUUID().toString();
 
+        RestAssured.basePath = "/users/{id}";
         given()
-                .baseUri(Constants.URI)
-                .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer " + token)
+                .spec(Specification.requestSpecJson())
+                .auth().oauth2(Constants.tokenOfTest)
+                .pathParam("id", fakeId)
                 .body(updateUser)
-                .patch("/users/" + fakeId)
+                .patch()
                 .then()
                 .statusCode(400)
                 .log().all()

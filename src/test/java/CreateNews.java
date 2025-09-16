@@ -2,6 +2,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -13,6 +14,11 @@ import static org.testng.AssertJUnit.assertEquals;
 @Epic(" Создание новости")
 @Owner("Sergey Bordiyan")
 public class CreateNews {
+
+    @BeforeAll
+    static void login() {
+        Methods.createUser();
+    }
 
     @Description("Успешное создание новости авторизованного пользователя")
     @Test
@@ -27,7 +33,6 @@ public class CreateNews {
     @Test
     public void createNewsNegative() {
         RestAssured.basePath = "/posts";
-
         given()
                 .spec(Specification.requestSpecMulti())
                 .auth().oauth2(Constants.tokenOfTest)

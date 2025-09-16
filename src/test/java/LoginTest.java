@@ -13,18 +13,19 @@ public class LoginTest {
     @Description("Успешная авторизация зарегистрированного пользователя с валидными данными")
     @Test
     public void successLog() {
-        Specification.installSpecification(Specification.requestSpecJson(), Specification.responseSpec200());
-        LoginRequest login = new LoginRequest(Constants.duplicateEmail, Constants.password);
+        Methods.createUser();
+        LoginRequest login = new LoginRequest(Constants.email, Constants.password);
 
         LoginResponse response = RestAssured.given()
+                .spec(Specification.requestSpecJson())
                 .body(login)
                 .post("/auth/login")
                 .then()
-                .statusCode(200)
+                .spec(Specification.responseSpec200())
                 .extract()
                 .as(LoginResponse.class);
 
-        Assert.assertEquals(response.getUser().getEmail(), Constants.duplicateEmail);
+        Assert.assertEquals(response.getUser().getEmail(), Constants.email);
     }
 
     @Description("Неуспешная авторизация незарегистрированного пользователя")

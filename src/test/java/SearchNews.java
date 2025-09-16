@@ -26,7 +26,5 @@ public class SearchNews {
         String text = response.getText();
 
         Assert.assertEquals(text, response.getText());
-
-        System.out.println(response);
     }
 }

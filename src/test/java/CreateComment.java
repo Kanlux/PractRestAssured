@@ -2,7 +2,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -11,7 +11,12 @@ import static org.hamcrest.core.IsIterableContaining.hasItems;
 
 @Epic("Добавление комментария к новости")
 @Owner("Sergey Bordiyan")
-public class CreateComm {
+public class CreateComment {
+
+    @BeforeAll
+    static void login() {
+        Methods.createUser();
+    }
 
     @Description("Успешное добавление комментария")
     @Test

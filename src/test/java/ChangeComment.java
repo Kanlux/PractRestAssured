@@ -3,6 +3,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -12,6 +13,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @Epic("Изменение комментария")
 @Owner("Sergey Bordiyan")
 public class ChangeComment {
+
+    @BeforeAll
+    static void login() {
+        Methods.createUser();
+    }
 
     @Description("Успешное изменение комментария по валидному ID")
     @Test

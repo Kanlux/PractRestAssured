@@ -2,6 +2,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
@@ -10,7 +11,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 @Epic("Удаление комментария")
 @Owner("Sergey Bordiyan")
-public class DeleteComm {
+public class DeleteComment {
+
+    @BeforeAll
+    static void login() {
+        Methods.createUser();
+    }
 
     @Description("Успешное удаление комментария по ID")
     @Test

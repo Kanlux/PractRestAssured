@@ -2,6 +2,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Owner;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -10,6 +11,11 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @Epic("Удаление новости по ID")
 @Owner("Sergey Bordiyan")
 public class RemoveNews {
+
+    @BeforeAll
+    static void login() {
+        Methods.createUser();
+    }
 
     @Description("Успешное удаление новости по верному ID")
     @Test
