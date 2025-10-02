@@ -15,6 +15,13 @@ pipeline {
                 sh 'mvn -Dtest=RegistrationTest.java verify'
             }
         }
+        stage('Package') {
+            steps {
+                echo "Создание артефакта..."
+                sh 'mvn package -DskipTests'
+                archiveArtifacts 'target/*.jar'
+            }
+        }
     }
     post {
         always {
