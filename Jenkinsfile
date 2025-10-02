@@ -12,7 +12,7 @@ pipeline {
         }
         stage ("run test"){
                     steps {
-                        sh "mvn -Dtest=.**"
+                        sh "mvn -Dtest=AllTests.java verify"
                     }
                 }
     }
