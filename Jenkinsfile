@@ -28,4 +28,9 @@ pipeline {
             echo "Пайплайн завершен со статусом: ${currentBuild.result}"
         }
     }
+    post {
+        always {
+            echo "Пайплайн завершен со статусом: ${currentBuild.result}"
+        }
+    }
 }
