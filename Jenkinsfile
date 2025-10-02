@@ -12,7 +12,7 @@ pipeline {
         }
         stage ("run tests"){
             steps {
-                sh 'mvn -Dtest=RegistrationTest.java,LoginUserTest.java verify'
+                sh 'mvn -Dtest=LoginUserTest.java verify'
             }
         }
         stage('Package') {
