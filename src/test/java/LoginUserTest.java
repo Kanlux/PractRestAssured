@@ -21,7 +21,7 @@ public class LoginUserTest {
                 .body(login)
                 .post(Constants.basePathUsersLogin)
                 .then()
-                .spec(Specification.responseSpec200())
+                .statusCode(200)
                 .extract()
                 .as(LoginResponse.class);
 
