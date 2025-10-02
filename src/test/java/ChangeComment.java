@@ -22,7 +22,7 @@ public class ChangeComment {
         CommentRequest comment = new CommentRequest("Comment", commId);
 
         //Если я помещаю в константы: basePathComments = "/comments/{id}" Мне выдаёт ошибку
-        //Из-за этого оставил не тронутым
+        //Из-за этого оставил нетронутым
 
         RestAssured.basePath = "/comments/{id}";
         CommentResponse response = given()
