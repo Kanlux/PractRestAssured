@@ -10,11 +10,10 @@ pipeline {
                 echo "Работает"
             }
         }
-        stage ("run test"){
+        stage ("run tests"){
                     steps {
                         sh 'mvn -Dtest=RegistrationTest.java verify'
                     }
                 }
-        }
     }
 }
