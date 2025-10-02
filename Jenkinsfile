@@ -15,6 +15,13 @@ pipeline {
                         sh "mvn -Dtest=.** verify"
                     }
                 }
-                allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+        post {
+            always {
+                allure([
+                    reportBuildPolicy: 'ALWAYS',
+                    result: [[path: 'allure-result']]
+                ])
+            }
+        }
     }
 }
