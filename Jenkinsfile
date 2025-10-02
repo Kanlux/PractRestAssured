@@ -15,5 +15,6 @@ pipeline {
                         sh "mvn -Dtest=.** verify"
                     }
                 }
+                allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
     }
 }
