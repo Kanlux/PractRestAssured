@@ -36,5 +36,5 @@ pipeline {
             always {
                 echo "Пайплайн завершен со статусом: ${currentBuild.result}"
             }
-        }
+
 }
