@@ -15,13 +15,6 @@ pipeline {
                         sh "mvn -Dtest=.** verify"
                     }
                 }
-        post {
-            always {
-                allure([
-                    reportBuildPolicy: 'ALWAYS',
-                    result: [[path: 'allure-result']]
-                ])
-            }
         }
     }
 }
