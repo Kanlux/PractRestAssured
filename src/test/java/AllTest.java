@@ -15,5 +15,5 @@ import org.junit.platform.suite.api.Suite;
         ChangeComment.class,
         DeleteComment.class
 })
-class AllTests {
+public class AllTest {
 }
