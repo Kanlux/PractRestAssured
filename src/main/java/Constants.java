@@ -17,5 +17,5 @@ public class Constants {
     static String basePathUsers = "/users/";
     static String basePathUsersLogin = "/auth/login";
     static String basePathUsersReg = "/auth/signup";
-    static String sdfsdfasdas;
+    static String sdfsds;
 }
