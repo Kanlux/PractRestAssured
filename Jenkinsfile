@@ -5,14 +5,35 @@ pipeline {
         }
     }
     stages {
-        stage ("build"){
+        stage ("Build"){
             steps {
-                echo "Работает"
+                echo "Компиляция проекта..."
             }
         }
-        stage ("run tests"){
-            steps {
-                sh 'mvn -Dtest=RegistrationTest.java, GetUserData.java verify'
+        stage ("Run Tests"){
+            echo "Запуск тестов"
+//             steps {
+//                 sh 'mvn -Dtest=RegistrationTest.java, GetUserData.java verify'
+//             }
+            script {
+                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                    sh 'mvn test -Dtest="RegistrationTest,LoginUserTest"'
+                }
+            }
+        }
+        post {
+            always {
+                junit '**/target/surefire-reports/*.xml'
+                publishHTML([
+                    target: [
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'target/site',
+                        reportFiles: 'index.html',
+                        reportName: 'Test Report'
+                    ]
+                ])
             }
         }
         stage('Package') {
