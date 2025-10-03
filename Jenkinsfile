@@ -11,7 +11,6 @@ pipeline {
             }
         }
         stage ("Run Tests"){
-            echo "Запуск тестов"
             steps {
                 sh 'mvn -Dtest=RegistrationTest.java, GetUserData.java verify'
             }
