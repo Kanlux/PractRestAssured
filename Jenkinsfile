@@ -23,7 +23,7 @@ pipeline {
 
         stage("Run Tests") {
             steps {
-                sh "mvn test -Dtest=RegistrationTest, LoginUserTest"
+                sh "mvn test -Dtest=RegistrationTest,LoginUserTest"
             }
             post {
                 always {
