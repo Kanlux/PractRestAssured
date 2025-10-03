@@ -23,6 +23,13 @@ pipeline {
                 archiveArtifacts 'target/*.jar'
             }
         }
+        stage("Checkout") {
+            steps {
+                git branch: 'Pract-M1-1',
+                credentialsId: 'jenkins',
+                url: 'https://github.com/Kanlux/PractRestAssured.git'
+            }
+        }
     }
 
     post {
