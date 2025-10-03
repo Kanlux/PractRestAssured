@@ -4,17 +4,20 @@ pipeline {
             label "agent"
         }
     }
+
     stages {
         stage ("Build"){
             steps {
                 echo "Компиляция проекта..."
             }
         }
+
         stage ("Run Tests"){
             steps {
                 sh 'mvn -Dtest=RegistrationTest.java, GetUserData.java verify'
             }
         }
+
         stage('Package') {
             steps {
                 echo "Создание артефакта..."
@@ -23,6 +26,7 @@ pipeline {
             }
         }
     }
+
     post {
         always {
             echo "Пайплайн завершен со статусом: ${currentBuild.result}"
