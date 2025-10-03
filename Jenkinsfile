@@ -5,16 +5,25 @@ pipeline {
         }
     }
 
-    tools {
-        maven 'M3'
-        jdk 'jdk17'
-    }
-
     stages {
-        stage('Build and Test') {
+        stage("Checkout") {
             steps {
-                echo 'Сборка и запуск тестов'
-                sh 'mvn clean compile test -Dtest=RegistrationTest'
+                git branch: 'Pract-M1-1',
+                credentialsId: 'github-practrestassured-token',
+                url: 'https://github.com/Kanlux/PractRestAssured.git'
+            }
+        }
+
+        stage("Build") {
+            steps {
+                echo "Сборка проекта"
+                sh "mvn clean compile"
+            }
+        }
+
+        stage("Run Tests") {
+            steps {
+                sh "mvn test -Dtest=RegistrationTest"
             }
             post {
                 always {
@@ -25,7 +34,7 @@ pipeline {
 
         stage('Package') {
             steps {
-                echo 'Создание артефакта...'
+                echo "Создание артефакта..."
                 sh 'mvn package -DskipTests'
             }
             post {
