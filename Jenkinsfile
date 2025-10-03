@@ -1,23 +1,21 @@
 pipeline {
-    agent {
-        node {
-            label "agent"
-        }
+    agent any
+    tools {
+        maven 'Maven-3.9'
+        jdk 'JDK-17'
     }
 
     stages {
-        stage ("Build"){
+        stage("Build") {
             steps {
-                echo "Компиляция проекта..."
+                echo "Сборка проекта"
             }
         }
-
-        stage ("Run Tests"){
+        stage("Run Tests") {
             steps {
-                sh 'mvn -Dtest=RegistrationTest.java, GetUserData.java verify'
+                sh "mvn -Dtest=RegistrationTest.java verify"
             }
         }
-
         stage('Package') {
             steps {
                 echo "Создание артефакта..."
