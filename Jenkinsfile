@@ -1,7 +1,7 @@
 pipeline {
     agent {
         node {
-            label "710a04c249021dda2bcfb3b6e0b477927295a19947a9175479e06943a5fb2e08"
+            label "jenkins"
         }
     }
 
