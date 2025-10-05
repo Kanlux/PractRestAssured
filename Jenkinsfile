@@ -32,7 +32,7 @@ pipeline {
             }
         }
 
-        stage('Package') {
+        stage('Reports') {
             steps {
                 echo "Создание артефакта..."
                 sh 'mvn package -DskipTests'
@@ -41,6 +41,12 @@ pipeline {
                 success {
                     archiveArtifacts 'target/*.jar'
                 }
+            }
+        }
+        stage ('Publish') {
+            steps {
+             echo 'Публикация артефактов'
+             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
     }
