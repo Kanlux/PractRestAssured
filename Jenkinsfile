@@ -62,7 +62,7 @@ pipeline {
 }
 
 
-// pipeline {ss
+// pipeline {
 //     agent {
 //         node {
 //             label "agent2"
