@@ -37,11 +37,6 @@ pipeline {
                 echo "Создание артефакта..."
                 sh 'mvn package -DskipTests'
             }
-            post {
-                success {
-                    archiveArtifacts 'target/*.jar'
-                }
-            }
         }
         stage ('Publish') {
             steps {
@@ -61,7 +56,7 @@ pipeline {
     }
 }
 
-//
+//ss
 // pipeline {
 //     agent {
 //         node {
