@@ -56,7 +56,7 @@ pipeline {
     }
 }
 
-//ss
+//
 // pipeline {
 //     agent {
 //         node {
