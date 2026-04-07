@@ -9,7 +9,7 @@ import static io.restassured.RestAssured.given;
 public class Methods {
 
     public static RegisterRequest createUser() {
-        String randomEmail = "user_" + UUID.randomUUID().toString().substring(0, 8) + "@nv.dunice.net";
+        String randomEmail = "user_" + UUID.randomUUID().toString().substring(0, 8) + "@yandex.ru";
         RegisterResponse newUser = new RegisterResponse(randomEmail, Constants.password);
 
         RegisterRequest response = given()
